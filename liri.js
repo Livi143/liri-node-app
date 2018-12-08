@@ -44,7 +44,7 @@ var getMeSpotify = function (songName) {
 
 var getMeMovie = function (movieName) {
     // request omdb stuff here ???
-};
+}
 
 var pick = function (caseData, functionData) {
     switch (caseData) {
@@ -53,6 +53,9 @@ var pick = function (caseData, functionData) {
             break;
         case 'spotify-this-song':
             getMeSpotify(functionData);
+            break;
+        case "do-what-it-says":
+            doWhatItSays();
             break;
         default: console.log("Liri doesn't know that");
     }
@@ -208,10 +211,10 @@ function getMovie(functionData) {
                 //else - throw error
                 console.log("Error occurred.")
             }
-    });
+        });
+    }
 }
-}
-    
+
 
 //Function for command do-what-it-says; reads and splits random.txt file
 //command: do-what-it-says
