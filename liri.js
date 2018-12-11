@@ -7,6 +7,7 @@ var request = require('request');
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 var axios = require('axios');
+var fs = require("fs");
 
 
 
@@ -90,7 +91,20 @@ function concertSearch(bandName) {
         .then(function (res) {
             console.log(res.data);
             // how to get to the data you want
+            for (var i = 0; i<res.data.length; i++){
+                console.log(res.data[i].venue.name, res.data[i].datetime2, res.data[i].venue.city);
+            }
         })
+}
+
+function doWhat() {
+    //Read random.txt file
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (!error);
+        console.log(data.toString());
+        //split text with comma delimiter
+        var cmds = data.toString().split(',');
+    });
 }
 
 var getMeMovie = function (movieName) {
@@ -106,10 +120,11 @@ var pick = function (caseData, functionData) {
             getMeSpotify(functionData);
             break;
         case "concert-this":
+            // name of venue, location, date
             concertSearch(functionData);
             break;
         case "do-what-it-says":
-            doWhatItSays();
+            doWhat();
             break;
 
         default: console.log("Liri doesn't know that");
@@ -240,15 +255,7 @@ pick(process.argv[2], process.argv[3]);
 
 //Function for command do-what-it-says; reads and splits random.txt file
 //command: do-what-it-says
-function doWhat() {
-    //Read random.txt file
-    fs.readFile("random.txt", "utf8", function (error, data) {
-        if (!error);
-        console.log(data.toString());
-        //split text with comma delimiter
-        var cmds = data.toString().split(',');
-    });
-}
+
 
 
 
