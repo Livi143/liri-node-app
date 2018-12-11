@@ -92,7 +92,7 @@ function concertSearch(bandName) {
             console.log(res.data);
             // how to get to the data you want
             for (var i = 0; i<res.data.length; i++){
-                console.log(res.data[i].venue.name, res.data[i].datetime2, res.data[i].venue.city);
+                console.log(res.data[i].venue.name, res.data[i].datetime, res.data[i].venue.city);
             }
         })
 }
