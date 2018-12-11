@@ -6,6 +6,7 @@ var keys = require('./keys.js');
 var request = require('request');
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
+var axios = require('axios');
 
 
 
@@ -42,6 +43,56 @@ var getMeSpotify = function (songName) {
     });
 };
 
+//OMDB Movie - command: movie-this
+function getMovie(functionData) {
+    // OMDB Movie - this MOVIE base code is from class files, I have modified for more data and assigned parse.body to a Var
+    var movieName = functionData;
+    // Then run a request to the OMDB API with the movie specified
+
+    //Response if user does not type in a movie title
+    if (!movieName) {
+        console.log("-----------------------");
+        console.log("If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/");
+        console.log("It's on Netflix!");
+    } else {
+        var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&apikey=trilogy";
+
+        request(queryUrl, function (error, response, body) {
+
+            // If the request is successful = 200
+            if (!error && response.statusCode === 200) {
+                var body = JSON.parse(body);
+
+                //Simultaneously output to console and log.txt via NPM simple-node-logger
+                console.log('================ Movie Info ================');
+                console.log("Title: " + body.Title);
+                console.log("Release Year: " + body.Year);
+                console.log("IMdB Rating: " + body.imdbRating);
+                console.log("Country: " + body.Country);
+                console.log("Language: " + body.Language);
+                console.log("Plot: " + body.Plot);
+                console.log("Actors: " + body.Actors);
+                console.log("Rotten Tomatoes Rating: " + body.Ratings[2].Value);
+                console.log("Rotten Tomatoes URL: " + body.tomatoURL);
+                console.log('==================THE END=================');
+
+            } else {
+                //else - throw error
+                console.log("Error occurred.")
+            }
+        });
+    }
+}
+
+
+function concertSearch(bandName) {
+    axios.get("https://rest.bandsintown.com/artists/" + bandName + "/events?app_id=anythingwillwork")
+        .then(function (res) {
+            console.log(res.data);
+            // how to get to the data you want
+        })
+}
+
 var getMeMovie = function (movieName) {
     // request omdb stuff here ???
 }
@@ -54,15 +105,25 @@ var pick = function (caseData, functionData) {
         case 'spotify-this-song':
             getMeSpotify(functionData);
             break;
+        case "concert-this":
+            concertSearch(functionData);
+            break;
         case "do-what-it-says":
             doWhatItSays();
             break;
+
         default: console.log("Liri doesn't know that");
     }
 };
 
 pick(process.argv[2], process.argv[3]);
 
+
+// switch (userCommand) {
+//     case "concert-this":
+
+//     // "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
+//     break;
 
 
 
@@ -174,46 +235,7 @@ pick(process.argv[2], process.argv[3]);
 //     });
 // }
 
-//OMDB Movie - command: movie-this
-function getMovie(functionData) {
-    // OMDB Movie - this MOVIE base code is from class files, I have modified for more data and assigned parse.body to a Var
-    var movieName = functionData;
-    // Then run a request to the OMDB API with the movie specified
 
-    //Response if user does not type in a movie title
-    if (!movieName) {
-        console.log("-----------------------");
-        console.log("If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/");
-        console.log("It's on Netflix!");
-    } else {
-        var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&apikey=trilogy";
-
-        request(queryUrl, function (error, response, body) {
-
-            // If the request is successful = 200
-            if (!error && response.statusCode === 200) {
-                var body = JSON.parse(body);
-
-                //Simultaneously output to console and log.txt via NPM simple-node-logger
-                console.log('================ Movie Info ================');
-                console.log("Title: " + body.Title);
-                console.log("Release Year: " + body.Year);
-                console.log("IMdB Rating: " + body.imdbRating);
-                console.log("Country: " + body.Country);
-                console.log("Language: " + body.Language);
-                console.log("Plot: " + body.Plot);
-                console.log("Actors: " + body.Actors);
-                console.log("Rotten Tomatoes Rating: " + body.Ratings[2].Value);
-                console.log("Rotten Tomatoes URL: " + body.tomatoURL);
-                console.log('==================THE END=================');
-
-            } else {
-                //else - throw error
-                console.log("Error occurred.")
-            }
-        });
-    }
-}
 
 
 //Function for command do-what-it-says; reads and splits random.txt file
@@ -332,11 +354,7 @@ function doWhat() {
 
 //   var userQuery = process.argv.splice(3); 
 
-//   switch (userCommand) {
-//       case "concert-this":
-//       concertSearch();
-//       // "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
-//       break;
+
 
 //       case "spotify-this-song":
 //       // function spotify-this-song;
@@ -352,9 +370,3 @@ function doWhat() {
 
 //   }
 
-//   function concertSearch() {
-//       axios.get("https://rest.bandsintown.com/artists/" + userQuery + "/events?app_id=anythingwillwork")
-//       .then(function(res){
-//           console.log(res);
-//       })
-//   }
